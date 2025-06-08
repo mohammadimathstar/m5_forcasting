@@ -1,0 +1,16 @@
+[project]
+name = "01-training"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "lightgbm>=4.6.0",
+    "mlflow>=2.22.1",
+    "numpy>=2.3.0",
+    "pandas>=2.2.3",
+    "pathlib>=1.0.1",
+    "prefect>=3.4.5",
+    "pytest>=8.4.0",
+    "scikit-learn>=1.7.0",
+]

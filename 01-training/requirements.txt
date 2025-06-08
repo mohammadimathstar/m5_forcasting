@@ -1,0 +1,8 @@
+numpy
+pandas
+mlflow
+lightgbm
+scikit-learn
+prefect
+pathlib
+pytest
