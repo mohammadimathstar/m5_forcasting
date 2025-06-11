@@ -3,6 +3,7 @@ from .data_loader import load_sales_data, load_calendar_data, load_sell_prices
 from .feature_engineering import melt_sales_data, add_lag_features, add_rolling_features, add_date_features
 from .model import train_model
 from .config import PROCESSED_DATA_DIR
+from .param_tunning import run_hyperopt
 
 import pandas as pd
 
@@ -62,8 +63,9 @@ def split_data(df: pd.DataFrame):
 
     return X_train, y_train, X_valid, y_valid
 
-@flow(name="m5-pipeline", log_prints=True)
-def m5_pipeline():
+@flow(name="m5_pipeline", log_prints=True)
+def m5_pipelines():
+    
     """
     Execute full M5 forecasting pipeline.
     """
@@ -73,11 +75,14 @@ def m5_pipeline():
 
     print("Splitting data...")
     X_train, y_train, X_valid, y_valid = split_data(df)
+    
+    print("Hyper-parameter search...")
+    best_params = run_hyperopt(X_train, y_train, X_valid, y_valid, max_evals=2)
 
     print("Training model...")
-    model = train_model(X_train, y_train, X_valid, y_valid)
+    model = train_model(X_train, y_train, X_valid, y_valid, best_params)
     return model
 
 
 if __name__ == "__main__":
-    m5_pipeline()
+    m5_pipelines()

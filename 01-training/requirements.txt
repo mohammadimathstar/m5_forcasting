@@ -6,3 +6,4 @@ scikit-learn
 prefect
 pathlib
 pytest
+hyperopt

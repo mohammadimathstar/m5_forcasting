@@ -16,8 +16,13 @@ prefect init
 
 prefect server start
 
-prefect worker start -p mypool2 -t process
+prefect worker start -p mypool3 -t process
 
-prefect deploy pipeline.py:m5_pipeline -n m5deployment -p mypool2
+prefect deploy pipeline.py:m5_pipeline_with_tuning -n m5deploy -p mypool3
 
-prefect deployment run m5-pipeline/m5deployment
+prefect deployment run m5_pipeline_with_tuning/m5deploy
+
+
+# to see cache in prefect
+prefect deployment ls
+prefect deployment delete <name>/<deploy_name>

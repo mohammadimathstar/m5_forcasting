@@ -8,7 +8,7 @@ from .metrics import smape, mase, smape_lgb_metric
 
 
 @task(name="Train_model", log_prints=True)
-def train_model(X_train, y_train, X_valid, y_valid):
+def train_model(X_train, y_train, X_valid, y_valid, params):
     """
     Train LightGBM model on training data.
 
@@ -23,25 +23,29 @@ def train_model(X_train, y_train, X_valid, y_valid):
     """
     
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
-    mlflow.set_experiment("m5_forecasting")
+    mlflow.set_experiment("m5")
 
 
     with mlflow.start_run():
-        params = {
-            'objective': 'regression',
-            'metric': 'None', #'rmse'
-            'learning_rate': 0.05,
-            'subsample': 0.8,
-            'colsample_bytree': 0.8,
-            'num_leaves': 128,
-            'verbose': -1
+        best_params = {
+           'objective': 'regression',
+           'metric': 'None', #'rmse'
+           'learning_rate': params['learning_rate'],
+           'min_data_in_leaf': int(params['min_data_in_leaf']),
+        #     'subsample': 0.8,
+        #    'colsample_bytree': 0.8,
+           'num_leaves': int(params['num_leaves']),
+           'feature_fraction': params['feature_fraction'],
+           'bagging_fraction': params['bagging_fraction'],
+           'lambda_l1': params['lambda_l1'],
+           'lambda_l2': params['lambda_l2']
         }
 
         train_data = lgb.Dataset(X_train, label=y_train)
         valid_data = lgb.Dataset(X_valid, label=y_valid)
 
         model = lgb.train(
-            params,
+            best_params,
             train_data,
             valid_sets=[train_data, valid_data],
             feval=smape_lgb_metric,
